@@ -25,7 +25,7 @@
     <arg name="Kd" default="9077.459,9077.459,9077.459,18880.925,18880.925,18880.925"/>
     <arg name="Ki" default="321.417,321.417,321.417,2096.951,2096.951,2096.951"/>
 
-    <arg name="teleop_on" default="false"/>
+    <arg name="teleop_on" default="true"/>
     <arg name="joy_id" default="0"/>
     <arg name="axis_yaw" default="0"/>
     <arg name="axis_x" default="4"/>

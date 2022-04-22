@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!-- Loading some constants -->
-  <xacro:include filename="$(find uuv_descriptions)/models/common/urdf/common.urdf.xacro"/>
+  <xacro:include filename="$(find uuv_descriptions)/urdf/common.urdf.xacro"/>
   <!-- Loading file with sensor macros -->
   <xacro:include filename="$(find uuv_sensor_ros_plugins)/urdf/sensor_snippets.xacro"/>
   <!-- Loading vehicle's specific macros -->
@@ -68,8 +68,6 @@
         <!-- This visual geometry representation can be used when running
              tasks in which you need Gazebo to start quickly
         -->
-        <!-- <xacro:if value="${use_simplified_mesh}"> -->
-        <!-- Code in rexrov2_base.xacro if use the flag use_simplified_mesh -->
 
         <visual>
           <origin xyz="0 0 0" rpy="0 0 0"/>
