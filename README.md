@@ -1,5 +1,7 @@
 # BlueROV2 ROS Simulation
 
+Taken and edited from https://github.com/fredvaz/bluerov2
+
 Attention! It's in development
 
 This repository contains the robot description and necessary launch files to
@@ -51,13 +53,19 @@ To run a demonstration with the vehicle, you can run a UUV
 simulator Gazebo scenario, such as
 
 ```bash
-roslaunch uuv_descriptions ocean_waves.launch
+roslaunch uuv_gazebo_worlds ocean_waves.launch
 ```
 
 and then
 
 ```bash
 roslaunch bluerov2_gazebo start_pid_controller_demo.launch 
+```
+
+To use a joystick, first start the joystick and then run
+
+```bash
+roslaunch bluerov2_control start_pid_controller.launch
 ```
 
 
