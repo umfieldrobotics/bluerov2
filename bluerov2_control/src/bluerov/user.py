@@ -50,7 +50,8 @@ class Code(object):
         self.pub = pubs.Pubs()
 
         self.pub.subscribe_topic('/mavros/rc/override', OverrideRCIn)
-        self.pub.subscribe_topic('/mavros/setpoint_velocity/cmd_vel', TwistStamped)
+        self.pub.subscribe_topic(
+            '/mavros/setpoint_velocity/cmd_vel', TwistStamped)
 
         # Thrusters Input
         #self.pub.subscribe_topic('/bluerov2/thrusters/0/input', FloatStamped)
@@ -60,21 +61,19 @@ class Code(object):
         #self.pub.subscribe_topic('/bluerov2/thrusters/4/input', FloatStamped)
         #self.pub.subscribe_topic('/bluerov2/thrusters/5/input', FloatStamped)
 
-
         self.sub.subscribe_topic('/joy', Joy)
         self.sub.subscribe_topic('/mavros/battery', BatteryState)
         self.sub.subscribe_topic('/mavros/rc/in', RCIn)
         self.sub.subscribe_topic('/mavros/rc/out', RCOut)
 
         #self.cam = None
-        #try:
-            #video_udp_port = rospy.get_param("/user_node/video_udp_port")
-            #rospy.loginfo("video_udp_port: {}".format(video_udp_port))
-            #self.cam = video.Video(video_udp_port)
-        #except Exception as error:
-            #rospy.loginfo(error)
-            #self.cam = video.Video()
-
+        # try:
+        #video_udp_port = rospy.get_param("/user_node/video_udp_port")
+        #rospy.loginfo("video_udp_port: {}".format(video_udp_port))
+        #self.cam = video.Video(video_udp_port)
+        # except Exception as error:
+        # rospy.loginfo(error)
+        #self.cam = video.Video()
 
     def arm(self):
         """ Arm the vehicle and trigger the disarm
@@ -82,11 +81,10 @@ class Code(object):
         rospy.wait_for_service('/mavros/cmd/arming')
 
         #self.arm_service = rospy.ServiceProxy('/mavros/cmd/arming', CommandBool)
-        #self.arm_service(True)
+        # self.arm_service(True)
 
         # Disarm is necessary when shutting down - not working, i think
-        #rospy.on_shutdown(self.disarm)
-
+        # rospy.on_shutdown(self.disarm)
 
     @staticmethod
     def pwm_to_thrust(pwm):
@@ -102,13 +100,13 @@ class Code(object):
         """
         # PWM to Forward
         if pwm > 1500:
-            pwm = pwm - 1500;
+            pwm = pwm - 1500
         # PWM to Backward
         elif pwm < 1500:
-            pwm = pwm - 1500;
+            pwm = pwm - 1500
         # PWM to STOP
         else:
-            pwm = 0;
+            pwm = 0
         return pwm
 
     def run(self):
@@ -117,12 +115,12 @@ class Code(object):
         while not rospy.is_shutdown():
             time.sleep(0.1)
             # Try to get data
-            #try:
-                #rospy.loginfo(self.sub.get_data()['mavros']['battery']['voltage'])
-                #rospy.loginfo(self.sub.get_data()['mavros']['rc']['in']['channels'])
-                #rospy.loginfo(self.sub.get_data()['mavros']['rc']['out']['channels'])
-            #except Exception as error:
-                #print('Get data error:', error)
+            # try:
+            # rospy.loginfo(self.sub.get_data()['mavros']['battery']['voltage'])
+            # rospy.loginfo(self.sub.get_data()['mavros']['rc']['in']['channels'])
+            # rospy.loginfo(self.sub.get_data()['mavros']['rc']['out']['channels'])
+            # except Exception as error:
+            #print('Get data error:', error)
 
             try:
                 # Get joystick data
@@ -130,36 +128,34 @@ class Code(object):
 
                 # rc run between 1100 and 2000, a joy command is between -1.0 and 1.0
                 #override = [int(val*400 + 1500) for val in joy]
-                #for _ in range(len(override), 8):
+                # for _ in range(len(override), 8):
                 #    override.append(0)
-	        
-		# Pitch, Roll
-		override = [1500, 1500]
-		# Throttle
-		override.append(int(joy[1]*400 + 1500))
-		# Yaw
-		override.append(int(joy[2]*400 + 1500))
-		# Forward
-		override.append(int(joy[3]*400 + 1500))
-		# Lateral
-		override.append(int(joy[0]*400 + 1500))
-		# Camera Pan
-		override.append(1500)
-		# Camera Tilt
-		override.append(int(joy[5]*400 + 1500))
 
+                # Pitch, Roll
+                override = [1500, 1500]
+                # Throttle
+                override.append(int(joy[1]*400 + 1500))
+                # Yaw
+                override.append(int(joy[2]*400 + 1500))
+                # Forward
+                override.append(int(joy[3]*400 + 1500))
+                # Lateral
+                override.append(int(joy[0]*400 + 1500))
+                # Camera Pan
+                override.append(1500)
+                # Camera Tilt
+                override.append(int(joy[5]*400 + 1500))
 
                 # Get Buttons data
                 buttons = self.sub.get_data()['joy']['buttons']
-		
-		# Lights 1 Level
-		#if buttons[5] > 0:
-		#	override.append(1700)
-		#elif buttons[7] > 0: 
-		#	override.append(1500)
 
-		# override.append(1300)	override len is 8!!!
- 
+                # Lights 1 Level
+                # if buttons[5] > 0:
+                #	override.append(1700)
+                # elif buttons[7] > 0:
+                #	override.append(1500)
+
+                # override.append(1300)	override len is 8!!!
 
                 # Send joystick data as rc output into rc override topic
                 # (fake radio controller)
@@ -168,8 +164,7 @@ class Code(object):
             except Exception as error:
                 print('joy error:', error)
 
-
-            #try:
+            # try:
                 # Get pwm output and send it to Gazebo model
                 #rc = self.sub.get_data()['mavros']['rc']['out']['channels']
 
@@ -198,19 +193,18 @@ class Code(object):
                 #_input.data = self.pwm_to_thrust(rc[5])
                 #self.pub.set_data('/bluerov2/thrusters/5/input', _input)
 
-
-            #except Exception as error:
+            # except Exception as error:
                 #print('rc error:', error)
 
-            #try:
-                #if not self.cam.frame_available():
+            # try:
+                # if not self.cam.frame_available():
                 #    continue
 
                 # Show video output
                 #frame = self.cam.frame()
                 #cv2.imshow('frame', frame)
-                #cv2.waitKey(1)
-            #except Exception as error:
+                # cv2.waitKey(1)
+            # except Exception as error:
                 #print('imshow error:', error)
 
     def disarm(self):
@@ -220,10 +214,10 @@ class Code(object):
 if __name__ == "__main__":
     try:
         rospy.init_node('user_node', log_level=rospy.DEBUG)
-        #rate = rospy.Rate(10) # 10hz
+        # rate = rospy.Rate(10) # 10hz
     except rospy.ROSInterruptException as error:
         print('pubs error with ROS: ', error)
         exit(1)
     code = Code()
     code.run()
-    #rate.sleep()
+    # rate.sleep()
